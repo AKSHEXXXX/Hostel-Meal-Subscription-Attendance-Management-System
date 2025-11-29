@@ -1,0 +1,8 @@
+breakfastPrice,130.0
+lunchPrice,150.0
+dinnerPrice,90.0
+refundPolicy,FIFTY_PERCENT
+mealCutoffTime,20:00
+breakfastTime,08:00
+lunchTime,13:00
+dinnerTime,20:00
