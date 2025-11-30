@@ -133,6 +133,16 @@ public class AttendancePanel extends JPanel {
             String dateStr = (String) dateComboBox.getSelectedItem();
             LocalDate date = LocalDate.parse(dateStr);
 
+            // Validate date - only allow today
+            LocalDate today = LocalDate.now();
+            
+            if (!date.equals(today)) {
+                JOptionPane.showMessageDialog(this,
+                    "Attendance can only be saved for today (" + today + ").",
+                    "Invalid Date", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
             Map<String, Map<MealType, String>> attendanceData = new HashMap<>();
 
             for (int i = 0; i < tableModel.getRowCount(); i++) {

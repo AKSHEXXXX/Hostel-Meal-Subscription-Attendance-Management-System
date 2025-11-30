@@ -69,7 +69,6 @@ public class Main {
     }
 
     @SuppressWarnings("UseSpecificCatch")
-    @SuppressWarnings("UseSpecificCatch")
     private static void initializeConfiguration() {
         try {
             ConfigurationDAO configDAO = new ConfigurationDAO();
@@ -79,8 +78,6 @@ public class Main {
             System.err.println("Error initializing configuration: " + e.getMessage());
         }
     }
-    @SuppressWarnings("UseSpecificCatch")
-
     @SuppressWarnings("UseSpecificCatch")
     private static void initializeAdminAccount() {
         try {

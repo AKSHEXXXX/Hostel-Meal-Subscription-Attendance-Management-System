@@ -34,15 +34,15 @@ public class ConfigurationPanel extends JPanel {
         // Form panel
         JPanel formPanel = new JPanel(new GridLayout(5, 2, 10, 10));
 
-        formPanel.add(new JLabel("Breakfast Price (Rs.):"));
+        formPanel.add(new JLabel("Breakfast Price (AED):"));
         breakfastPriceField = new JTextField();
         formPanel.add(breakfastPriceField);
 
-        formPanel.add(new JLabel("Lunch Price (Rs.):"));
+        formPanel.add(new JLabel("Lunch Price (AED):"));
         lunchPriceField = new JTextField();
         formPanel.add(lunchPriceField);
 
-        formPanel.add(new JLabel("Dinner Price (Rs.):"));
+        formPanel.add(new JLabel("Dinner Price (AED):"));
         dinnerPriceField = new JTextField();
         formPanel.add(dinnerPriceField);
 

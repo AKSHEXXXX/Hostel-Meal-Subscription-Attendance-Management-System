@@ -39,7 +39,7 @@ public class Student extends User implements Observer {
 
         if (this.balance < amount) {
             throw new InsufficientBalanceException(
-                String.format("Insufficient balance. Required: Rs. %.2f, Available: Rs. %.2f",
+                String.format("Insufficient balance. Required: AED %.2f, Available: AED %.2f",
                     amount, this.balance));
         }
 

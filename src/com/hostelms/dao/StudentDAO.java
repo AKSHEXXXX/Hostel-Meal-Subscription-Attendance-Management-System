@@ -166,11 +166,16 @@ public class StudentDAO {
             throw new FileCorruptionException("Invalid admin data format");
         }
 
-        String rollNumber = parts[0].trim();
-        String name = parts[1].trim();
-        String password = parts[2].trim();
+        try {
+            String rollNumber = parts[0].trim();
+            String name = parts[1].trim();
+            String password = parts[2].trim();
+            double balance = Double.parseDouble(parts[3].trim());
 
-        return new Admin(rollNumber, name, password);
+            return new Admin(rollNumber, name, password, balance);
+        } catch (NumberFormatException e) {
+            throw new FileCorruptionException("Invalid balance format");
+        }
     }
 
     private String studentToString(Student student) {
@@ -182,10 +187,11 @@ public class StudentDAO {
     }
 
     private String adminToString(Admin admin) {
-        return String.format("%s,%s,%s,0.00",
+        return String.format("%s,%s,%s,%.2f",
             admin.getRollNumber(),
             admin.getName(),
-            admin.getPassword());
+            admin.getPassword(),
+            admin.getBalance());
     }
 
     private void writeAllStudents(List<Student> students) throws DataAccessException {

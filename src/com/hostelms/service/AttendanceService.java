@@ -27,12 +27,28 @@ public class AttendanceService {
     public void markAttendance(LocalDate date, Map<String, Map<MealType, String>> attendanceData)
         throws DataAccessException, InsufficientBalanceException {
 
+        // Validate date - only allow today
+        LocalDate today = LocalDate.now();
+        
+        if (!date.equals(today)) {
+            throw new DataAccessException(
+                "Attendance can only be saved for today (" + today + ").");
+        }
+
         MealConfiguration config = configDAO.loadConfiguration();
         RefundPolicy refundPolicy = getRefundPolicy(config.getRefundPolicy());
 
         for (Map.Entry<String, Map<MealType, String>> entry : attendanceData.entrySet()) {
             String rollNumber = entry.getKey();
             Map<MealType, String> studentAttendance = entry.getValue();
+
+            // Check if attendance already processed for this date
+            // by checking if meal record status is already "COMPLETED"
+            MealRecord existingRecord = mealRecordDAO.findByRollNumberAndDate(rollNumber, date);
+            if (existingRecord != null && "COMPLETED".equals(existingRecord.getStatus())) {
+                throw new DataAccessException(
+                    "Attendance already processed for " + date + ". Cannot process again.");
+            }
 
             // Save attendance
             attendanceDAO.saveAttendanceRecord(rollNumber, date, studentAttendance);
