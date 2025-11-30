@@ -39,7 +39,7 @@ public class TransactionService {
 
         // Notify student
         Notification notification = new Notification(
-            String.format("Charged Rs. %.2f for %s. Balance: Rs. %.2f",
+            String.format("Charged AED %.2f for %s. Balance: AED %.2f",
                 amount, mealType, student.getBalance()), "INFO");
         NotificationCenter.getInstance().notifyStudent(rollNumber, notification);
     }
@@ -65,7 +65,7 @@ public class TransactionService {
 
         // Notify student
         Notification notification = new Notification(
-            String.format("Refunded Rs. %.2f for missed %s. Balance: Rs. %.2f",
+            String.format("Refunded AED %.2f for missed %s. Balance: AED %.2f",
                 amount, mealType, student.getBalance()), "SUCCESS");
         NotificationCenter.getInstance().notifyStudent(rollNumber, notification);
     }
@@ -89,7 +89,7 @@ public class TransactionService {
 
         // Notify student
         Notification notification = new Notification(
-            String.format("Balance recharged by Rs. %.2f. New balance: Rs. %.2f",
+            String.format("Balance recharged by AED %.2f. New balance: AED %.2f",
                 amount, student.getBalance()), "SUCCESS");
         NotificationCenter.getInstance().notifyStudent(rollNumber, notification);
     }

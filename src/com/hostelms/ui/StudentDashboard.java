@@ -31,7 +31,7 @@ public class StudentDashboard extends JFrame {
 
         // Top panel - Balance and logout
         JPanel topPanel = new JPanel(new BorderLayout());
-        balanceLabel = new JLabel("Balance: Rs. " +
+        balanceLabel = new JLabel("Balance: AED " +
             String.format("%.2f", student.getBalance()));
         balanceLabel.setFont(new Font("Arial", Font.BOLD, 16));
         topPanel.add(balanceLabel, BorderLayout.WEST);
@@ -59,7 +59,7 @@ public class StudentDashboard extends JFrame {
     }
 
     public void updateBalance() {
-        balanceLabel.setText("Balance: Rs. " +
+        balanceLabel.setText("Balance: AED " +
             String.format("%.2f", student.getBalance()));
     }
 

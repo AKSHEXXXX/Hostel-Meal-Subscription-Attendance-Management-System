@@ -56,11 +56,84 @@ public class ReportService {
         }
 
         report.append("Financial Summary:\n");
-        report.append("Total Charges: Rs. ").append(String.format("%.2f", totalCharges)).append("\n");
-        report.append("Total Refunds: Rs. ").append(String.format("%.2f", totalRefunds)).append("\n");
-        report.append("Net Revenue: Rs. ").append(String.format("%.2f", totalCharges - totalRefunds)).append("\n");
+        report.append("Total Charges: AED ").append(String.format("%.2f", totalCharges)).append("\n");
+        report.append("Total Refunds: AED ").append(String.format("%.2f", totalRefunds)).append("\n");
+        report.append("Net Revenue: AED ").append(String.format("%.2f", totalCharges - totalRefunds)).append("\n");
 
         return report.toString();
+    }
+
+    public String generateExpectedMealReport(LocalDate date) throws DataAccessException {
+        StringBuilder report = new StringBuilder();
+        report.append("Expected Meal Report for ").append(date).append("\n");
+        report.append("=".repeat(50)).append("\n\n");
+
+        List<MealRecord> records = mealRecordDAO.findByDate(date);
+
+        if (records.isEmpty()) {
+            report.append("No meal selections found for this date.\n");
+            return report.toString();
+        }
+
+        int breakfastCount = 0, lunchCount = 0, dinnerCount = 0;
+        double breakfastRevenue = 0, lunchRevenue = 0, dinnerRevenue = 0;
+
+        // Fixed meal prices
+        final double BREAKFAST_PRICE = 30.00;
+        final double LUNCH_PRICE = 50.00;
+        final double DINNER_PRICE = 40.00;
+
+        for (MealRecord record : records) {
+            if (record.isBreakfastSelected()) {
+                breakfastCount++;
+                breakfastRevenue += BREAKFAST_PRICE;
+            }
+            if (record.isLunchSelected()) {
+                lunchCount++;
+                lunchRevenue += LUNCH_PRICE;
+            }
+            if (record.isDinnerSelected()) {
+                dinnerCount++;
+                dinnerRevenue += DINNER_PRICE;
+            }
+        }
+
+        report.append("Expected Meal Counts:\n");
+        report.append("-".repeat(50)).append("\n");
+        report.append(String.format("%-20s %10s %15s\n", "Meal Type", "Count", "Revenue"));
+        report.append("-".repeat(50)).append("\n");
+        report.append(String.format("%-20s %10d     AED %10.2f\n", "Breakfast", breakfastCount, breakfastRevenue));
+        report.append(String.format("%-20s %10d     AED %10.2f\n", "Lunch", lunchCount, lunchRevenue));
+        report.append(String.format("%-20s %10d     AED %10.2f\n", "Dinner", dinnerCount, dinnerRevenue));
+        report.append("-".repeat(50)).append("\n");
+
+        int totalMeals = breakfastCount + lunchCount + dinnerCount;
+        double totalRevenue = breakfastRevenue + lunchRevenue + dinnerRevenue;
+
+        report.append(String.format("%-20s %10d     AED %10.2f\n", "TOTAL", totalMeals, totalRevenue));
+        report.append("\n");
+
+        report.append("Total Students: ").append(records.size()).append("\n");
+        report.append("Expected Revenue: AED ").append(String.format("%.2f", totalRevenue)).append("\n");
+
+        return report.toString();
+    }
+
+    public boolean isAttendanceSaved(LocalDate date) throws DataAccessException {
+        List<MealRecord> records = mealRecordDAO.findByDate(date);
+        
+        if (records.isEmpty()) {
+            return false;
+        }
+
+        // Check if any meal record has been completed (attendance saved)
+        for (MealRecord record : records) {
+            if ("COMPLETED".equals(record.getStatus())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public List<String[]> getMealSelectionTableData(LocalDate date)

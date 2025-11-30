@@ -34,7 +34,7 @@ public class MealSelectionPanel extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
         // Title panel
-        JPanel titlePanel = new JPanel(new GridLayout(2, 1));
+        JPanel titlePanel = new JPanel(new GridLayout(3, 1));
         JLabel titleLabel = new JLabel("Select Meals for Tomorrow", JLabel.CENTER);
         titleLabel.setFont(new Font("Arial", Font.BOLD, 16));
         titlePanel.add(titleLabel);
@@ -44,14 +44,22 @@ public class MealSelectionPanel extends JPanel {
         dateLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         titlePanel.add(dateLabel);
 
+        // Add balance label
+        JLabel balanceLabel = new JLabel(
+            String.format("Current Balance: AED %.2f", student.getBalance()), 
+            JLabel.CENTER);
+        balanceLabel.setFont(new Font("Arial", Font.BOLD, 14));
+        balanceLabel.setForeground(new Color(0, 100, 0));
+        titlePanel.add(balanceLabel);
+
         add(titlePanel, BorderLayout.NORTH);
 
         // Meal selection panel
         JPanel mealsPanel = new JPanel(new GridLayout(4, 1, 10, 10));
 
-        breakfastCheckBox = new JCheckBox("Breakfast (Rs. 30.00)");
-        lunchCheckBox = new JCheckBox("Lunch (Rs. 50.00)");
-        dinnerCheckBox = new JCheckBox("Dinner (Rs. 40.00)");
+        breakfastCheckBox = new JCheckBox("Breakfast (AED 30.00)");
+        lunchCheckBox = new JCheckBox("Lunch (AED 50.00)");
+        dinnerCheckBox = new JCheckBox("Dinner (AED 40.00)");
 
         mealsPanel.add(breakfastCheckBox);
         mealsPanel.add(lunchCheckBox);
@@ -87,6 +95,21 @@ public class MealSelectionPanel extends JPanel {
     private void handleUpdateSelection() {
         try {
             LocalDate tomorrow = LocalDate.now().plusDays(1);
+
+            // Calculate total cost for selected meals
+            double totalCost = 0.0;
+            if (breakfastCheckBox.isSelected()) totalCost += 30.00;
+            if (lunchCheckBox.isSelected()) totalCost += 50.00;
+            if (dinnerCheckBox.isSelected()) totalCost += 40.00;
+
+            // Check if student has sufficient balance
+            if (totalCost > student.getBalance()) {
+                statusLabel.setText(String.format(
+                    "Insufficient balance! Required: AED %.2f, Available: AED %.2f",
+                    totalCost, student.getBalance()));
+                statusLabel.setForeground(Color.RED);
+                return;
+            }
 
             // Update breakfast
             if (breakfastCheckBox.isSelected()) {
