@@ -45,6 +45,12 @@ public class AttendancePanel extends JPanel {
         dateComboBox.addItem(LocalDate.now().plusDays(1).toString());  // Tomorrow
         dateComboBox.addItem(LocalDate.now().toString());              // Today
         dateComboBox.addItem(LocalDate.now().minusDays(1).toString()); // Yesterday
+        dateComboBox.addItem(LocalDate.now().minusDays(2).toString()); // 2 days ago
+        dateComboBox.addItem(LocalDate.now().minusDays(3).toString()); // 3 days ago
+        dateComboBox.addItem(LocalDate.now().minusDays(4).toString()); // 4 days ago
+        dateComboBox.addItem(LocalDate.now().minusDays(5).toString()); // 5 days ago
+        dateComboBox.addItem(LocalDate.now().minusDays(6).toString()); // 6 days ago
+        dateComboBox.addItem(LocalDate.now().minusDays(7).toString()); // 7 days ago
         topPanel.add(dateComboBox);
 
         loadButton = new JButton("Load Meal Selections");
