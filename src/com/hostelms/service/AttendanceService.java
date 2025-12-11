@@ -27,7 +27,6 @@ public class AttendanceService {
     public void markAttendance(LocalDate date, Map<String, Map<MealType, String>> attendanceData)
         throws DataAccessException, InsufficientBalanceException {
 
-        // Validate date - only allow today
         LocalDate today = LocalDate.now();
         
         if (!date.equals(today)) {
@@ -42,18 +41,14 @@ public class AttendanceService {
             String rollNumber = entry.getKey();
             Map<MealType, String> studentAttendance = entry.getValue();
 
-            // Check if attendance already processed for this date
-            // by checking if meal record status is already "COMPLETED"
             MealRecord existingRecord = mealRecordDAO.findByRollNumberAndDate(rollNumber, date);
             if (existingRecord != null && "COMPLETED".equals(existingRecord.getStatus())) {
                 throw new DataAccessException(
                     "Attendance already processed for " + date + ". Cannot process again.");
             }
 
-            // Save attendance
             attendanceDAO.saveAttendanceRecord(rollNumber, date, studentAttendance);
 
-            // Process charges and refunds
             processChargesAndRefunds(rollNumber, date, studentAttendance, config, refundPolicy);
         }
     }
@@ -65,7 +60,7 @@ public class AttendanceService {
 
         MealRecord mealRecord = mealRecordDAO.findByRollNumberAndDate(rollNumber, date);
         if (mealRecord == null) {
-            return; // No meal selections for this student
+            return;
         }
 
         for (MealType mealType : MealType.values()) {
@@ -73,12 +68,10 @@ public class AttendanceService {
             String attendanceStatus = attendance.get(mealType);
 
             if (selected && "PRESENT".equals(attendanceStatus)) {
-                // Charge for meal
                 double price = config.getMealPrice(mealType);
                 transactionService.chargeMeal(rollNumber, date, mealType, price);
 
             } else if (selected && "ABSENT".equals(attendanceStatus)) {
-                // Refund for missed meal
                 double price = config.getMealPrice(mealType);
                 double refundAmount = refundPolicy.calculateRefund(price);
                 transactionService.refundMeal(rollNumber, date, mealType, refundAmount,
@@ -86,7 +79,6 @@ public class AttendanceService {
             }
         }
 
-        // Update meal record status
         mealRecord.setStatus("COMPLETED");
         mealRecordDAO.updateMealRecord(mealRecord);
     }

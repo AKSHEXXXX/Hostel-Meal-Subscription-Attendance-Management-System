@@ -22,6 +22,5 @@ public class ValidationUtil {
         if (!date.equals(tomorrow)) {
             throw new InvalidDateException("Can only select meals for tomorrow");
         }
-        // Cutoff time check removed for demonstration purposes
     }
 }

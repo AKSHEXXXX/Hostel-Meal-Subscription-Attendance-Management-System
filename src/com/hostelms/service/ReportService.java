@@ -43,7 +43,6 @@ public class ReportService {
         report.append("Lunch: ").append(lunchCount).append("\n");
         report.append("Dinner: ").append(dinnerCount).append("\n\n");
 
-        // Add transaction summary
         List<Transaction> transactions = transactionDAO.findByDateRange(date, date);
         double totalCharges = 0, totalRefunds = 0;
 
@@ -78,7 +77,6 @@ public class ReportService {
         int breakfastCount = 0, lunchCount = 0, dinnerCount = 0;
         double breakfastRevenue = 0, lunchRevenue = 0, dinnerRevenue = 0;
 
-        // Fixed meal prices
         final double BREAKFAST_PRICE = 30.00;
         final double LUNCH_PRICE = 50.00;
         final double DINNER_PRICE = 40.00;
@@ -126,7 +124,6 @@ public class ReportService {
             return false;
         }
 
-        // Check if any meal record has been completed (attendance saved)
         for (MealRecord record : records) {
             if ("COMPLETED".equals(record.getStatus())) {
                 return true;

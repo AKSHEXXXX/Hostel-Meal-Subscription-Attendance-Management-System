@@ -35,7 +35,6 @@ public class AuthenticationService {
         } else {
             Student student = studentDAO.findByRollNumber(rollNumber);
             if (student != null && student.authenticate(password)) {
-                // Attach to notification center
                 NotificationCenter.getInstance().attach(student);
                 return student;
             }

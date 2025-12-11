@@ -21,10 +21,8 @@ public class MealService {
     public void selectMeal(String rollNumber, LocalDate date, MealType mealType)
         throws MealSelectionException, DataAccessException {
 
-        // Validate date (cutoff time removed for demonstration)
         ValidationUtil.validateMealSelection(date);
 
-        // Load or create meal record
         MealRecord record = mealRecordDAO.findByRollNumberAndDate(rollNumber, date);
         if (record == null) {
             record = new MealRecord(rollNumber, date);
@@ -33,7 +31,6 @@ public class MealService {
         record.selectMeal(mealType);
         mealRecordDAO.saveMealRecord(record);
 
-        // Notify student
         Notification notification = new Notification(
             mealType + " selected for " + date, "SUCCESS");
         NotificationCenter.getInstance().notifyStudent(rollNumber, notification);
@@ -42,19 +39,17 @@ public class MealService {
     public void cancelMeal(String rollNumber, LocalDate date, MealType mealType)
         throws MealSelectionException, DataAccessException {
 
-        // Validate date (cutoff time removed for demonstration)
         ValidationUtil.validateMealSelection(date);
 
-        // Load meal record
         MealRecord record = mealRecordDAO.findByRollNumberAndDate(rollNumber, date);
         if (record == null) {
-            return; // Nothing to cancel
+            return;
         }
 
         record.cancelMeal(mealType);
         mealRecordDAO.saveMealRecord(record);
 
-        // Notify student
+       
         Notification notification = new Notification(
             mealType + " cancelled for " + date, "INFO");
         NotificationCenter.getInstance().notifyStudent(rollNumber, notification);

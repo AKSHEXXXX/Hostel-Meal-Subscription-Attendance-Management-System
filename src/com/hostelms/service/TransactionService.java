@@ -27,17 +27,14 @@ public class TransactionService {
             throw new DataAccessException("Student not found: " + rollNumber);
         }
 
-        // Deduct balance
         student.deductBalance(amount);
         studentDAO.updateStudent(student);
 
-        // Create transaction
         String txnId = transactionDAO.generateNextTransactionId();
         Transaction transaction = new Transaction(txnId, rollNumber, date,
             TransactionType.CHARGE, amount, mealType, "Charge for " + mealType);
         transactionDAO.saveTransaction(transaction);
 
-        // Notify student
         Notification notification = new Notification(
             String.format("Charged AED %.2f for %s. Balance: AED %.2f",
                 amount, mealType, student.getBalance()), "INFO");
@@ -52,18 +49,15 @@ public class TransactionService {
             throw new DataAccessException("Student not found: " + rollNumber);
         }
 
-        // Add balance
         student.addBalance(amount);
         studentDAO.updateStudent(student);
 
-        // Create transaction
         String txnId = transactionDAO.generateNextTransactionId();
         Transaction transaction = new Transaction(txnId, rollNumber, date,
             TransactionType.REFUND, amount, mealType,
             policyName + " for missed " + mealType);
         transactionDAO.saveTransaction(transaction);
 
-        // Notify student
         Notification notification = new Notification(
             String.format("Refunded AED %.2f for missed %s. Balance: AED %.2f",
                 amount, mealType, student.getBalance()), "SUCCESS");
@@ -81,13 +75,11 @@ public class TransactionService {
         student.addBalance(amount);
         studentDAO.updateStudent(student);
 
-        // Create transaction
         String txnId = transactionDAO.generateNextTransactionId();
         Transaction transaction = new Transaction(txnId, rollNumber, LocalDate.now(),
             TransactionType.RECHARGE, amount, null, "Balance recharge");
         transactionDAO.saveTransaction(transaction);
 
-        // Notify student
         Notification notification = new Notification(
             String.format("Balance recharged by AED %.2f. New balance: AED %.2f",
                 amount, student.getBalance()), "SUCCESS");
